@@ -62,6 +62,13 @@ game.HUD.Container = me.ObjectContainer.extend({
 		// Health HUD: Shows how many times the player
 		//             get hit before losing a life
 		this.addChild(new game.HUD.health(0, 32));
+
+		this.addChild(new game.HUD.radar(
+			game.tile(12),
+			game.tile(1),
+			game.tile(3),
+			game.tile(2)
+		));
 	}
 });
 
@@ -279,4 +286,72 @@ game.HUD.health = me.Renderable.extend({
 		}
 	}
 });
+
+
+/**
+ * Shows a mini representation of the map.
+ */
+game.HUD.radar = me.Renderable.extend({
+
+	init : function(x, y, w, h) {
+
+		this.parent(new me.Vector2d(x, y), w, h);
+
+		// Make sure we use screen coordinates
+		// (not relative)
+		this.floating = true;
+
+		this.count = 0;
+	},
+
+	/**
+	 * Called every frame to update the object.
+	 *
+	 * @note If it returns `false`, will not redraw
+	 *       on the screen.
+	 *       Good for optimizations.
+	 */
+	update : function(dt) {
+		this.count += dt;
+		if (this.count > 1000) {
+			this.count = 0;
+			return false;
+		}
+
+		return true;
+	},
+
+	/**
+	 * Draws how many friends are remaining.
+	 */
+	draw : function(context) {
+
+		context.fillStyle = 'green';
+		context.fillRect(this.pos.x, this.pos.y, this.width, this.height);
+
+		var levelWidth  = me.game.currentLevel.width;
+		var levelHeight = me.game.currentLevel.height;
+
+		context.fillStyle = 'yellow';
+		context.fillRect(
+			this.pos.x + (me.game.player.pos.x * this.width/levelWidth),
+			this.pos.y + (me.game.player.pos.y * this.height/levelHeight),
+			1,
+			2
+		);
+
+		context.fillStyle = 'red';
+		for (var i = 0; i < me.game.friends.length; i++) {
+			if (me.game.friends[i] !== null) {
+				context.fillRect(
+					this.pos.x + (me.game.friends[i].pos.x * this.width/levelWidth),
+					this.pos.y + (me.game.friends[i].pos.y * this.height/levelHeight),
+					1,
+					2
+				);
+			}
+		}
+	}
+});
+
 

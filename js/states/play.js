@@ -97,7 +97,8 @@ game.PlayState = me.ScreenObject.extend({
 	 * global namespace (so other people can access it).
 	 */
 	onLevelLoaded : function onLevelLoaded() {
-		me.game.player = me.game.world.getChildByName("player")[0];
+		me.game.player  = me.game.world.getChildByName("player")[0];
+		me.game.friends = me.game.world.getChildByName("friend");
 		console.log("done!");
 	},
 

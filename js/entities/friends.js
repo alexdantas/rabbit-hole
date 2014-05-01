@@ -144,6 +144,7 @@ game.friendEntity = me.CollectableEntity.extend({
 		// Warning the global counter
 		friends.remove();
 
+		me.game.friends[me.game.friends.indexOf(this)] = null;
 		me.game.world.removeChild(this);
 		me.audio.play("cling");
 	}
