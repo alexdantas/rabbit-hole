@@ -2,10 +2,9 @@
 
 ![logo](http://alexdantas.net/games/ld29/data/image/logo.png)
 
-Game entry for [the Ludum Dare #29 competition][ld29] ([here's the entry][entry]).
-It's a simple HTML5 2D platformer, made in 72h and powered by [melonJS][melonjs].
-
-It works on most web browsers, including on mobile devices.
+Simple HTML5 2D platformer, initially made [for the Ludum Dare #29][entry].
+Powered by [melonJS][melonjs], it works on most web browsers,
+including on mobile devices.
 
 ## Gameplay
 
@@ -104,11 +103,10 @@ The whole code is released under the *MIT-license*.
 Check file `LICENSE.md` for details on what you can and
 cannot do with it.
 
-[ld29]:        http://www.ludumdare.com/compo/ludum-dare-29/
 [entry]:       http://www.ludumdare.com/compo/ludum-dare-29/?action=preview&uid=36899
 [melonjs]:     http://melonjs.org/
-[play]:        http://alexdantas.net/games/ld29
-[repo]:        http://github.com/alexdantas/ludum-dare-29
+[play]:        http://alexdantas.net/games/rabbit-hole
+[repo]:        http://github.com/alexdantas/rabbit-hole
 [alexdantas]:  http://alexdantas.net
 [bdnachi]:     http://bdnachi.deviantart.com/
 [tut]:         http://melonjs.github.io/tutorial/
