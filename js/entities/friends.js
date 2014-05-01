@@ -35,6 +35,16 @@ var friends = {
 	_rescued : 0,
 
 	/**
+	 * Initializes the friend counter.
+	 * @note Make sure to call this before the game
+	 *       starts, otherwise the counter will keep
+	 *       adding up!
+	 */
+	reset : function() {
+		friends._total = 0;
+	},
+
+	/**
 	 * Warns that we've just added a friend
 	 * on the map.
 	 *

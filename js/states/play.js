@@ -8,7 +8,7 @@
  *       Go look the files on `js/entities`
  */
 
-/*global game,me*/
+/*global game,me,friends*/
 
 game.PlayState = me.ScreenObject.extend({
 
@@ -17,21 +17,20 @@ game.PlayState = me.ScreenObject.extend({
 	 */
 	onResetEvent : function() {
 
-		// Load the first level
+		// Reset the score and friend count
+		game.data.score = 0;
+		friends.reset();
+
+		// Load the current level
 		//
 		// @warning On mobile devices this takes FOREVER
 		//          There must be a way I can warn the users
 		//          of such behavior.
 		me.levelDirector.loadLevel(game.data.currentLevel);
 
-		// Reset the score
-		game.data.score = 0;
-
-
 		// Add our HUD to the game world
 		this.HUD = new game.HUD.Container();
 		me.game.world.addChild(this.HUD);
-
 
 		// Placing a "pause" button right
 		// on the bottom of the screen.
