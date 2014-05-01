@@ -13,6 +13,11 @@
 
 /*global game,me*/
 
+// Default values for HEALTH and LIVES
+// (restored at every respawn)
+var defaultPlayerHealth = 5;
+var defaultPlayerLives  = 3;
+
 game.playerEntity = me.ObjectEntity.extend({
 
 	// Constructor
@@ -25,6 +30,9 @@ game.playerEntity = me.ObjectEntity.extend({
 		settings.spriteheight = settings.height = 64;
 
 		this.parent(x, y, settings);
+
+		// To respawn later
+		this.originalPosition = new me.Vector2d(x, y);
 
 		// Normally things outside the screen (viewport)
 		// are not updated.
@@ -110,7 +118,8 @@ game.playerEntity = me.ObjectEntity.extend({
 		// will have effect
 		this.jumpKeyReleased = false;
 
-		this.health = 100;
+		this.health = defaultPlayerHealth;
+		this.lives  = defaultPlayerLives;
 
 		// Tells display to follow our position on both axis.
 		me.game.viewport.follow(this.pos, me.game.viewport.AXIS.BOTH);
@@ -132,10 +141,10 @@ game.playerEntity = me.ObjectEntity.extend({
 			return false;
 
 		// Fell into outside the screen
-		if (! this.inViewport) {
-			this.die();
-			return false;
-		}
+		// if (! this.inViewport) {
+		// 	this.die();
+		// 	return false;
+		// }
 
 		// Handling input
 
@@ -234,9 +243,9 @@ game.playerEntity = me.ObjectEntity.extend({
 				else {
 
 					// Oops, we got hit by an enemy
-					if (!this.invincible) {
+					if (! this.invincible) {
 
-						this.health -= 20;
+						this.health--;
 
 						if (this.health <= 0) {
 							this.die();
@@ -323,7 +332,6 @@ game.playerEntity = me.ObjectEntity.extend({
 			// Only jumping a little higher if the
 			// timer allows.
 			if ((me.timer.getTime() - this.jumpTimer) < this.jumpTimerDelta) {
-
 				this.vel.y = -this.maxVel.y * me.timer.tick;
 			}
 		}
@@ -333,10 +341,28 @@ game.playerEntity = me.ObjectEntity.extend({
 	},
 
 	/**
-	 * Makes the player die and returns to the main menu.
+	 * Makes the player die and respawn.
+	 *
+	 * @note If there are no more lives left, goes to the
+	 *       Game Over state/screen.
 	 */
 	die : function() {
 
+		this.lives--;
+
+		// We still have lives left, let's respawn
+		// the player.
+		if (this.lives >= 0) {
+			this.pos.x = this.originalPosition.x;
+			this.pos.y = this.originalPosition.y;
+
+			this.health = defaultPlayerHealth;
+			this.renderable.flicker(2000);
+			this.invincible = true;
+			return;
+		}
+
+		// Oops, game over!
 		this.alive = false;
 		me.device.vibrate(500);
 		me.game.world.removeChild(this);
@@ -420,8 +446,7 @@ game.playerEntity = me.ObjectEntity.extend({
 	debugUpdate : function() {
 
 		if (me.input.isKeyPressed("die"))
-			me.video.init("screen", 960, 960, true);
-//			this.die();
+			this.die();
 
 		else if (me.input.isKeyPressed("score+"))
 			game.data.score += Number.prototype.random(1, 11);

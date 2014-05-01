@@ -10,6 +10,7 @@ var game = {
 	/**
 	 * Stores information that will be used on current
 	 * game session.
+	 *
 	 * @note This is reset every time the game restarts
 	 *       For persistent information saving
 	 *       (across page loads, for example) see `me.save`
@@ -18,7 +19,7 @@ var game = {
 		score : 0,
 
 		// First level to be loaded
-		currentLevel : "area00"
+		currentLevel : "area01"
 	},
 
 	/**
