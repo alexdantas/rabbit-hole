@@ -65,7 +65,7 @@ game.MainMenuState = me.ScreenObject.extend({
 		this.menu.addItem(
 			" CREDITS",
 			function () {
-				console.log("Clicked third button");
+				me.state.change(me.state.STATE_CREDITS);
 			}
 		);
 
@@ -131,7 +131,7 @@ game.MainMenuState = me.ScreenObject.extend({
 				);
 				me.game.font.draw(
 					context,
-					"MOVE",
+					"(MOVE)",
 					game.tile(7),
 					game.tile(11) + game.half_tile(1)
 				);
@@ -144,7 +144,7 @@ game.MainMenuState = me.ScreenObject.extend({
 				);
 				me.game.font.draw(
 					context,
-					"JUMP",
+					"(JUMP)",
 					game.tile(11),
 					game.tile(12) + game.half_tile(1)
 				);
@@ -157,7 +157,7 @@ game.MainMenuState = me.ScreenObject.extend({
 				);
 				me.game.font.draw(
 					context,
-					"RUN",
+					"(RUN)",
 					game.tile(7),
 					game.tile(13) + game.half_tile(1)
 				);
