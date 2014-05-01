@@ -61,7 +61,7 @@ var friends = {
 	 * be rescued.
 	 */
 	remaining : function() {
-		return _total;
+		return friends._total;
 	}
 };
 
