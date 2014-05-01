@@ -9,6 +9,62 @@
 
 /*global game,me*/
 
+/**
+ * Global counter that keeps track of:
+ *
+ * - How many friends are currently on the map;
+ * - Which of them were rescued;
+ * - how many are left.
+ *
+ * @note This doesn't change anything on the map.
+ *       Scroll down to see how we actually
+ *       define the friends.
+ */
+var friends = {
+
+	/**
+	 * How many friends are there on the map.
+	 * @note Don't use this directly, use the functions below.
+	 */
+	_total : 0,
+
+	/**
+	 * How many friends were rescued.
+	 * @note Don't use this directly, use the functions below.
+	 */
+	_rescued : 0,
+
+	/**
+	 * Warns that we've just added a friend
+	 * on the map.
+	 *
+	 * @note This doesn't actually changes nothing
+	 *       on the map, just a virtual counter.
+	 */
+	add : function() {
+		friends._total++;
+	},
+
+	remove : function() {
+		friends._total--;
+	},
+
+	/**
+	 * Tells if all the friends were rescued.
+	 */
+	wereRescued : function() {
+		return (friends._total == 0);
+	},
+
+	/**
+	 * Tells how many friends are waiting to
+	 * be rescued.
+	 */
+	remaining : function() {
+		return _total;
+	}
+};
+
 game.friendEntity = me.CollectableEntity.extend({
 
 	init : function(x, y, settings) {
@@ -60,6 +116,9 @@ game.friendEntity = me.CollectableEntity.extend({
 			shape.width,
 			32
 		);
+
+		// Warning the the global counter
+		friends.add();
 	},
 
 	// Function called by the engine when object
@@ -71,6 +130,9 @@ game.friendEntity = me.CollectableEntity.extend({
 
 		// make sure it can't be collected again
 		this.collidable = false;
+
+		// Warning the global counter
+		friends.remove();
 
 		me.game.world.removeChild(this);
 		me.audio.play("cling");
