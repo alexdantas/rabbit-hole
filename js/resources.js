@@ -10,11 +10,17 @@ game.resources = [
 	//  __    ___    __    ___   _     _   __    __
 	// / /`_ | |_)  / /\  | |_) | |_| | | / /`  ( (`
 	// \_\_/ |_| \ /_/--\ |_|   |_| | |_| \_\_, _)_)
+	//
+	// Tilesets
 	{
-		// Level Tileset
 		name : "tiles32x32",
 		type : "image",
 		src  :  "data/image/tile/tiles32x32.png"
+	},
+	{
+		name : "decoration32x32",
+		type : "image",
+		src  :  "data/image/tile/decoration32x32.png"
 	},
 
 	{
