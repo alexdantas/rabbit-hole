@@ -134,6 +134,8 @@ var game = {
 		me.pool.register("enemy-fire-walk",  game.enemyFireWalk);
 		me.pool.register("enemy-fire-stand", game.enemyFireStand);
 
+		me.pool.register("message",  game.messageEntity);
+
 		// Defining some custom constants to uniquely
 		// identify some entities
 		me.game.SPIKE_OBJECT = "spike";
