@@ -71,7 +71,9 @@ game.MainMenuState = me.ScreenObject.extend({
 
 		me.game.world.addChild(this.menu);
 
+
 		// Creating and adding the scrollable text
+		// on the bottom of the screen
 		me.game.world.addChild(new (me.Renderable.extend ({
 
 			// Constructor
@@ -89,14 +91,14 @@ game.MainMenuState = me.ScreenObject.extend({
 				// For now the only messages supported are
 				// in ALL CAPS due to the bitmap font
 				this.scroller    = "*THANKS FOR PLAYING THIS GAME*";
-				this.scrollerpos = 600;
+				this.scrollerpos = 480;
 			},
 
 			// Callback for the tween objects
 			scrollover : function() {
 
 				// reset to default value
-				this.scrollerpos = 600;
+				this.scrollerpos = 480;
 				this.scrollertween
 					.to({scrollerpos: -2200 }, 10000)
 					.onComplete(this.scrollover.bind(this))
@@ -104,6 +106,7 @@ game.MainMenuState = me.ScreenObject.extend({
 			},
 
 			update : function(dt) {
+				// This will make it redraw every frame
 				return true;
 			},
 
@@ -111,7 +114,53 @@ game.MainMenuState = me.ScreenObject.extend({
 
 				var xoffset = game.half_tile(10);
 
-				me.game.font.draw(context, this.scroller, this.scrollerpos, game.half_tile(29));
+				me.game.font.draw(
+					context,
+					this.scroller,
+					this.scrollerpos,
+					game.half_tile(29)
+				);
+
+				// Besides the scroller, let's draw
+				// some text explaining the controls
+				me.game.font.draw(
+					context,
+					"ARROW KEYS,WASD",
+					game.tile(7),
+					game.tile(11)
+				);
+				me.game.font.draw(
+					context,
+					"MOVE",
+					game.tile(7),
+					game.tile(11) + game.half_tile(1)
+				);
+
+				me.game.font.draw(
+					context,
+					"SPACE",
+					game.tile(11),
+					game.tile(12)
+				);
+				me.game.font.draw(
+					context,
+					"JUMP",
+					game.tile(11),
+					game.tile(12) + game.half_tile(1)
+				);
+
+				me.game.font.draw(
+					context,
+					"SHIFT",
+					game.tile(7),
+					game.tile(13)
+				);
+				me.game.font.draw(
+					context,
+					"RUN",
+					game.tile(7),
+					game.tile(13) + game.half_tile(1)
+				);
 			},
 
 			onDestroyEvent : function() {
@@ -128,8 +177,6 @@ game.MainMenuState = me.ScreenObject.extend({
 		me.input.bindKey(me.input.KEY.DOWN,  "down");
 		me.input.bindKey(me.input.KEY.UP,    "up");
 		me.input.bindKey(me.input.KEY.ENTER, "enter", true);
-
-//		me.input.bindPointer(me.input.mouse.LEFT, me.input.KEY.ENTER);
 
 		this.handler = me.event.subscribe(me.event.KEYDOWN, function (action, keyCode, edge) {
 
