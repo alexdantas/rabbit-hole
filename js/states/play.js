@@ -57,6 +57,7 @@ game.PlayState = me.ScreenObject.extend({
 		me.input.bindKey(me.input.KEY.D,     "right");
 		me.input.bindKey(me.input.KEY.UP,    "jump");
 		me.input.bindKey(me.input.KEY.W,     "jump");
+		me.input.bindKey(me.input.KEY.SPACE, "jump");
 		me.input.bindKey(me.input.KEY.SHIFT, "boost", false, true);
 
 		// Extra keys reserved for the developers
@@ -165,6 +166,7 @@ game.PlayState = me.ScreenObject.extend({
 		me.input.unbindKey(me.input.KEY.UP,    "jump",  true);
 		me.input.unbindKey(me.input.KEY.W,     "jump",  true);
 		me.input.unbindKey(me.input.KEY.SHIFT, "boost", true);
+		me.input.unbindKey(me.input.KEY.SPACE, "jump");
 
 		if (game.debugMode) {
 			me.input.unbindKey(me.input.KEY.I, "die");
