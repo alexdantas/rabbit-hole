@@ -65,7 +65,7 @@ game.HUD.Container = me.ObjectContainer.extend({
 
 		this.addChild(new game.HUD.radar(
 			game.tile(12),
-			game.tile(1),
+			game.half_tile(1),
 			game.tile(3),
 			game.tile(2)
 		));
@@ -326,11 +326,18 @@ game.HUD.radar = me.Renderable.extend({
 	 */
 	draw : function(context) {
 
+		context.save();
+
+		context.globalAlpha *= 0.5;
 		context.fillStyle = 'green';
 		context.fillRect(this.pos.x, this.pos.y, this.width, this.height);
+		context.strokeStyle = 'black';
+		context.strokeRect(this.pos.x, this.pos.y, this.width, this.height);
 
 		var levelWidth  = me.game.currentLevel.width;
 		var levelHeight = me.game.currentLevel.height;
+
+		context.strokeStyle = 'none';
 
 		context.fillStyle = 'yellow';
 		context.fillRect(
@@ -340,7 +347,8 @@ game.HUD.radar = me.Renderable.extend({
 			2
 		);
 
-		context.fillStyle = 'red';
+		context.fillStyle = 'black';
+
 		for (var i = 0; i < me.game.friends.length; i++) {
 			if (me.game.friends[i] !== null) {
 				context.fillRect(
@@ -351,6 +359,7 @@ game.HUD.radar = me.Renderable.extend({
 				);
 			}
 		}
+		context.restore();
 	}
 });
 
