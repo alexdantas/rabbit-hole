@@ -123,11 +123,13 @@ var game = {
 		// Add game entities to the entity pool.
 		// They're defined on the `js/entities` directory
 		//
-		// That first string is the name we'll look for
-		// when reading Tiled maps' entities.
+		// That first string is for Tiled - we'll look for
+		// it when reading Tiled maps' entities.
 		me.pool.register("player", game.playerEntity);
 		me.pool.register("star",   game.starEntity);
 		me.pool.register("spike",  game.spikeEntity);
+
+		me.pool.register("friend",  game.friendEntity);
 
 		me.pool.register("enemy-fire-walk",  game.enemyFireWalk);
 		me.pool.register("enemy-fire-stand", game.enemyFireStand);

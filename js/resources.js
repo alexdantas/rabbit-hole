@@ -23,20 +23,22 @@ game.resources = [
 		src  :  "data/image/tile/decoration32x32.png"
 	},
 
+	// Spritesheets
 	{
 		name : "player-spritesheet",
 		type : "image",
 		src  :  "data/image/sprite/player.png"
 	},
-
 	{
-		// Collectable star
+		name : "friends-spritesheet",
+		type : "image",
+		src  :  "data/image/sprite/friends.png"
+	},
+	{
 		name : "star-spritesheet",
 		type : "image",
 		src  :  "data/image/sprite/star.png"
 	},
-
-	// Enemies
 	{
 		name : "fire-walk",
 		type : "image",
@@ -53,6 +55,7 @@ game.resources = [
 		src  :  "data/image/sprite/spike.png"
 	},
 
+	// Backgrounds
 	{
 		// Parallax 1
 		name : "area01_bkg0",
@@ -71,13 +74,13 @@ game.resources = [
 		type : "image",
 		src  :  "data/image/area01_bkg2.png"
 	},
-
 	{
 		name : "main-menu-bg",
 		type : "image",
 		src  :  "data/image/gui/title_screen.png"
 	},
 
+	// Buttons
 	{
 		name : "menu-button-on",
 		type : "image",
