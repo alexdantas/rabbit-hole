@@ -21,6 +21,10 @@ game.PlayState = me.ScreenObject.extend({
 		game.data.score = 0;
 		friends.reset();
 
+		// Call `thisl.onLevelLoaded()` every time
+		// a new level is loaded.
+		me.game.onLevelLoaded = this.onLevelLoaded.bind(this);
+
 		// Load the current level
 		//
 		// @warning On mobile devices this takes FOREVER
@@ -62,11 +66,11 @@ game.PlayState = me.ScreenObject.extend({
 		// Extra keys reserved for the developers
 		// Don't you try to cheat using those!
 		if (game.debugMode) {
-			me.input.bindKey(me.input.KEY.I, "die");
+			me.input.bindKey(me.input.KEY.I, "die", true);
 			me.input.bindKey(me.input.KEY.O, "score+");
 			me.input.bindKey(me.input.KEY.P, "score-");
-			me.input.bindKey(me.input.KEY.K, "area+");
-			me.input.bindKey(me.input.KEY.L, "area-");
+			me.input.bindKey(me.input.KEY.K, "area+", true);
+			me.input.bindKey(me.input.KEY.L, "area-", true);
 		}
 
 		// To make able to control the game with the mouse
@@ -86,6 +90,15 @@ game.PlayState = me.ScreenObject.extend({
 			me.game.viewport,
 			this.mouseUp.bind(this)
 		);
+	},
+
+	/**
+	 * Attaches a reference to the player on the
+	 * global namespace (so other people can access it).
+	 */
+	onLevelLoaded : function onLevelLoaded() {
+		me.game.player = me.game.world.getChildByName("player")[0];
+		console.log("done!");
 	},
 
 	/**

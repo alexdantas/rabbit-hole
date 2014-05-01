@@ -92,6 +92,18 @@ game.resources = [
 		src  :  "data/image/gui/menu-button-off.png"
 	},
 
+	// Icons
+	{
+		name : "health-icon",
+		type : "image",
+		src  :  "data/image/gui/health.png"
+	},
+	{
+		name : "life-icon",
+		type : "image",
+		src  :  "data/image/gui/life.png"
+	},
+
 	/* Atlases
 	 * @example
 	 * {name: "example_tps", type: "tps", src: "data/image/example_tps.json"},
