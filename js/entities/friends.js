@@ -1,10 +1,16 @@
 /**
  * All the different friends you need to rescue.
  *
- * @note We expect you to create them on Tiled.
+ * @note We expect you to create them on Tiled
+ *       with the name `friend`.
  *
  * @note Their sprite will be randomly selected
- *       from the entire spritesheet
+ *       from the entire spritesheet.
+ *
+ * @note When you define a `friend` on Tiled you're
+ *       just defining where it _could_ be.
+ *       For more information, scroll down to the
+ *       _invalid_ flag inside _friendEntity_.
  */
 
 /*global game,me*/
@@ -23,16 +29,16 @@
 var friends = {
 
 	/**
+	 * Container with all the friend Objects currently
+	 * on the game.
+	 */
+	_friends : [],
+
+	/**
 	 * How many friends are there on the map.
 	 * @note Don't use this directly, use the functions below.
 	 */
 	_total : 0,
-
-	/**
-	 * How many friends were rescued.
-	 * @note Don't use this directly, use the functions below.
-	 */
-	_rescued : 0,
 
 	/**
 	 * Initializes the friend counter.
@@ -41,7 +47,8 @@ var friends = {
 	 *       adding up!
 	 */
 	reset : function() {
-		friends._total = 0;
+		friends._total   = 0;
+		friends._friends = [];
 	},
 
 	/**
@@ -51,11 +58,22 @@ var friends = {
 	 * @note This doesn't actually changes nothing
 	 *       on the map, just a virtual counter.
 	 */
-	add : function() {
-		friends._total++;
+	add : function(friend) {
+		friends._total = friends._friends.push(friend);
 	},
 
-	remove : function() {
+	/**
+	 * Removes a specific friend from the map.
+	 */
+	remove : function(friend) {
+		friends.removeAt(friends._friends.indexOf(friend));
+	},
+
+	/**
+	 * Removes a friend from a specific array index.
+	 */
+	removeAt : function(index) {
+		friends._friends[index].invalid = true;
 		friends._total--;
 	},
 
@@ -72,68 +90,144 @@ var friends = {
 	 */
 	remaining : function() {
 		return friends._total;
+	},
+
+	/**
+	 * Limits the currently existing amount of friends on the map.
+	 *
+	 * @param amount Maximum amount of friends allowed (inclusive).
+	 */
+	limitAmount : function(amount) {
+
+		if (friends.remaining() <= amount)
+			return;
+
+		var deleteAmount = friends.remaining() - amount;
+		var maxIndex     = friends.remaining() - 1;
+
+		while (deleteAmount > 0) {
+
+			var i = 0;
+
+			// Getting the first non-invalid friend
+			do {
+
+				i = Number.prototype.random(0, maxIndex);
+
+			} while (friends._friends[i].invalid);
+
+			// And "deleting" it
+			friends.removeAt(i);
+			deleteAmount--;
+		}
 	}
 };
 
+/**
+ * Represents a single friend that the player
+ * must rescue.
+ *
+ * @note Of utmost importance is the `invalid`
+ *       flag. Check it out.
+ */
 game.friendEntity = me.CollectableEntity.extend({
+
+	/**
+	 * This flag tells if this friend _actually exist_.
+	 *
+	 * Here's the thing:
+	 *   on the Tiled map we define
+	 *   several places where friends COULD exist.
+	 *
+	 * Now, when we get to the maximum allowed
+	 *   amount of friends (say, 7) the rest of them
+	 *   becomes "invalid", meaning they will not exist.
+	 *
+	 * As a matter of fact, they're just placeholders
+	 *   for possible friends
+	 *   to exist.
+	 */
+	invalid : false,
 
 	init : function(x, y, settings) {
 
 		settings.image = "friends-spritesheet";
 
-		settings.spritewidth  = settings.width  = 32;
-		settings.spriteheight = settings.height = 64;
+		// The collision box will be of approximately 1 tile
+		// Even though each individual sprite has the following sizes:
+		settings.spritewidth  = settings.width  = 43;
+		settings.spriteheight = settings.height = 50;
 
+		// Setting up parent-class stuff
 		this.parent(x, y, settings);
 
+		// Adjusting the collision box
+		// (we'll count only the bottom tile)
+		// var shape = this.getShape();
+		// shape.pos.x = 5;
+		// shape.pos.y = 6;
+		// shape.resize(
+		// 	32,//shape.width  - 2*shape.pos.x,
+		// 	32//shape.height - 2*shape.pos.y
+		// );
+
 		// Randomly selecting this friends' sprite
-		switch (Number.prototype.random(0, 5))
+		switch (Number.prototype.random(0, 6))
 		{
 		case 0:
-			this.renderable.addAnimation("pig", [0]);
-			this.renderable.setCurrentAnimation("pig");
+			this.renderable.addAnimation("horse", [0]);
+			this.renderable.setCurrentAnimation("horse");
 			break;
 
 		case 1:
-			this.renderable.addAnimation("rabbit", [1]);
-			this.renderable.setCurrentAnimation("rabbit");
+			this.renderable.addAnimation("cabra", [1]);
+			this.renderable.setCurrentAnimation("cabra");
 			break;
 
 		case 2:
-			this.renderable.addAnimation("bear", [2]);
-			this.renderable.setCurrentAnimation("bear");
+			this.renderable.addAnimation("cat", [2]);
+			this.renderable.setCurrentAnimation("cat");
 			break;
 
 		case 3:
-			this.renderable.addAnimation("dog", [3]);
-			this.renderable.setCurrentAnimation("dog");
+			this.renderable.addAnimation("bear", [3]);
+			this.renderable.setCurrentAnimation("bear");
 
 		case 4:
 			this.renderable.addAnimation("cat", [4]);
 			this.renderable.setCurrentAnimation("cat");
 			break;
 
+		case 5:
+			this.renderable.addAnimation("rabbit", [5]);
+			this.renderable.setCurrentAnimation("rabbit");
+			break;
+
 		default:
-			this.renderable.addAnimation("goat", [5]);
-			this.renderable.setCurrentAnimation("goat");
+			this.renderable.addAnimation("pig", [6]);
+			this.renderable.setCurrentAnimation("pig");
 		}
 
-		// Adjusting the collision box
-		// (we'll count only the bottom tile)
-		var shape = this.getShape();
-		shape.pos.y = 32;
-		shape.resize(
-			shape.width,
-			32
-		);
-
 		// Warning the the global counter
-		friends.add();
+		friends.add(this);
+	},
+
+	update : function(dt) {
+		if (! this.invalid)
+			this.parent(dt);
+	},
+
+	draw : function(context) {
+		if (! this.invalid)
+			this.parent(context);
 	},
 
 	// Function called by the engine when object
 	// is touched by something
 	onCollision : function() {
+
+		if (this.invalid)
+			return;
 
 		// do something when collected
 		game.data.score += 100;
@@ -142,10 +236,10 @@ game.friendEntity = me.CollectableEntity.extend({
 		this.collidable = false;
 
 		// Warning the global counter
-		friends.remove();
+		friends.remove(this);
 
-		me.game.friends[me.game.friends.indexOf(this)] = null;
-		me.game.world.removeChild(this);
+//		me.game.friends[me.game.friends.indexOf(this)] = null;
+//		me.game.world.removeChild(this);
 		me.audio.play("cling");
 	}
 });

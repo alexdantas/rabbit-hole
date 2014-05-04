@@ -322,12 +322,13 @@ game.HUD.radar = me.Renderable.extend({
 	},
 
 	/**
-	 * Draws how many friends are remaining.
+	 * Draws the radar, with player and friends' positions.
 	 */
 	draw : function(context) {
 
 		context.save();
 
+		// Outside of the radar
 		context.globalAlpha *= 0.5;
 		context.fillStyle = 'green';
 		context.fillRect(this.pos.x, this.pos.y, this.width, this.height);
@@ -339,6 +340,7 @@ game.HUD.radar = me.Renderable.extend({
 
 		context.strokeStyle = 'none';
 
+		// Player position
 		context.fillStyle = 'yellow';
 		context.fillRect(
 			this.pos.x + (me.game.player.pos.x * this.width/levelWidth),
@@ -349,8 +351,9 @@ game.HUD.radar = me.Renderable.extend({
 
 		context.fillStyle = 'black';
 
+		// Drawing all the friends
 		for (var i = 0; i < me.game.friends.length; i++) {
-			if (me.game.friends[i] !== null) {
+			if (! me.game.friends[i].invalid) {
 				context.fillRect(
 					this.pos.x + (me.game.friends[i].pos.x * this.width/levelWidth),
 					this.pos.y + (me.game.friends[i].pos.y * this.height/levelHeight),

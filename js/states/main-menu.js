@@ -33,8 +33,6 @@ game.MainMenuState = me.ScreenObject.extend({
 				// It's very ugly to directly
 				// access a game state...
 				me.state.current().startGame();
-
-				console.log("Clicked first button");
 			}
 		);
 		this.menu.addItem(
