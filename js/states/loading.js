@@ -102,8 +102,11 @@ game.CustomLoadingScreen = me.ScreenObject.extend({
 
 		// Updating the progress bar each time something
 		// is loaded.
-		// Send as an argument the percentage of resources
-		// loaded (number between 0 and 1).
+		//
+		// @note When a LOADER_PROGRESS event happens, we get
+		//       two arguments:
+		//       - Total load percentage (number between 0 and 1)
+		//       - Resource just loaded (resource Object)
 		this.handler = me.event.subscribe(
 			me.event.LOADER_PROGRESS,
 			this.onProgressUpdate.bind(this)
@@ -115,9 +118,17 @@ game.CustomLoadingScreen = me.ScreenObject.extend({
 	 *
 	 * @note This is _not_ an automatic melonJS callback!
 	 *       I set this up at the end of `onResetEvent`.
+	 *
+	 * @note When a `LOADER_PROGRESS` event happens, we get
+	 *       two arguments:
+	 *       - Total load percentage (number between 0 and 1)
+	 *       - Resource just loaded (resource Object)
 	 */
-	"onProgressUpdate" : function(progress) {
-		this.progressBar.onProgressUpdate(progress);
+	"onProgressUpdate" : function(progress, res) {
+		this.progressBar.onProgressUpdate(
+			progress,
+			"Loaded " + res.type + ": " + res.name + "..."
+		);
 	},
 
 	"onDestroyEvent" : function() {

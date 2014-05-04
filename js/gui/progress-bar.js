@@ -36,6 +36,18 @@ me.ProgressBar = me.Renderable.extend({
 								padding);
 
 		this.setColors('white', 'black');
+
+		// Optional text to display on top of the progress bar
+		this.text = null;
+
+		// Creating font just in case...
+		//
+		// TODO: Dynamically adjust the font size according
+		//       to our size
+		// TODO: Default font name?
+		this.font = new me.Font(
+			"century gothic", 12, "white", "middle"
+		);
     },
 
 	/**
@@ -45,9 +57,13 @@ me.ProgressBar = me.Renderable.extend({
 	 * @param progress Number between 0 and 1 representing
 	 *                 the percentage of progress of the bar.
 	 */
-    onProgressUpdate : function(progress) {
+    onProgressUpdate : function(progress, text) {
         this.progressWidth = Math.floor(progress * this.width);
         this.forceRedraw   = true;
+
+		this.text = ((typeof(text) === "undefined") ?
+					 null :
+					 text);
     },
 
     // make sure the screen is refreshed every frame
@@ -80,6 +96,17 @@ me.ProgressBar = me.Renderable.extend({
 			this.pos.y         + this.progressPadding.y,
 			this.progressWidth - this.progressPadding.x * 2,
 			this.height        - this.progressPadding.y * 2
+		);
+
+		// Now we draw the OPTIONAL text.
+		if (this.text === null)
+			return;
+
+		this.font.draw(
+			context,
+			this.text,
+			this.pos.x + this.progressPadding.x + 2,
+			this.pos.y + this.progressPadding.y
 		);
     },
 

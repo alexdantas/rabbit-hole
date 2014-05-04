@@ -69,6 +69,23 @@ var game = {
 			return;
 		}
 
+		// As soon as we get a context, I'll show a message
+		// that assures we're loading stuff.
+		// That's to avoid that ugly black screen that takes
+		// a while on slow internet connections.
+		//
+		// @note This is an ugly HACK to draw on the canvas
+		//       when we're not supposed to.
+		new me.Font(
+			"century gothic",
+			12,
+			"white", "middle"
+		).draw(
+			me.video.getScreenContext(),
+			"Hold on, preloading stuff...",
+			0, 0
+		);
+
 		// Add "#debug" to the URL to enable the debug mode
 		// - Has a debug Panel on top
 		// - Several gameplay features are enabled (like secret keys)
@@ -88,8 +105,6 @@ var game = {
 		//
 		// Will only go to it after loading it's background
 		// image first.
-		//
-		// For it's implementation, see file `states/loading.js`
 		me.loader.load(
 
 			// I need to full specify the resource here
@@ -101,7 +116,7 @@ var game = {
 			},
 
 			// Called when finished loading the resource above
-			this.readyToLoadScreen.bind(this),
+			this.goToLoadingScreen.bind(this),
 
 			// Called when an error occurs when loading
 			function() {
@@ -110,8 +125,14 @@ var game = {
 		);
 	},
 
-	readyToLoadScreen : function() {
+	/**
+	 * Changes the current state to the loading screen.
+	 * @note Only call this when you're sure any resources used
+	 *       there were loaded (for instance, the background image)!
+	 */
+	goToLoadingScreen : function() {
 
+		// For it's implementation, see file `states/loading.js`
 		me.state.set(me.state.LOADING, new game.CustomLoadingScreen());
 
 		// Set a callback to run when loading is complete.
