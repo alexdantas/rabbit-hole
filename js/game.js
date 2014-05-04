@@ -64,7 +64,8 @@ var game = {
 	"onload" : function() {
 
 		// Initialize the video.
-		if (! me.video.init("screen", 480, 480, true)) {
+		// TODO: See if `double buffering` is any good for performance
+		if (! me.video.init("screen", 480, 480, true)) {//, "auto", true)) {
 			alert("Your browser does not support HTML5 canvas.");
 			return;
 		}
@@ -139,6 +140,7 @@ var game = {
 		me.loader.onload = this.loaded.bind(this);
 
 		// Load the resources.
+		// (defined on `js/resources.js`
 		me.loader.preload(game.resources);
 
 		// Initialize melonJS and display a loading screen.
@@ -209,7 +211,6 @@ var game = {
 			// (music and sound effects)
 			sound : true
 		});
-
 
 		// If these settings have different values
 		// than the default it means we saved the

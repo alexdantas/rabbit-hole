@@ -131,16 +131,31 @@ game.playerEntity = me.ObjectEntity.extend({
 		//       save to `me.save`
 		game.data.currentLevel = me.levelDirector.getCurrentLevelId();
 
+		// We need this flag to be sure the player's
+		// "death animation" is running
+		this.dying = false;
+
 		this.type = me.game.PLAYER_OBJECT;
 	},
 
-	// Update the player position.
+	/**
+	 * Called every frame to update the Player's internal state.
+	 *
+	 * @note Remember, if we return `true` we tell the engine
+	 *       to redraw the player. `false` tells it to avoid
+	 *       having all the work of doing that.
+	 */
+
 	update : function(delta) {
 
 		if (! this.alive)
 			return false;
 
-		// Fell into outside the screen
+		// Player's death animation is happening
+		if (this.dying)
+			return true;
+
+		// // Fell into outside the screen
 		// if (! this.inViewport) {
 		// 	this.die();
 		// 	return false;
@@ -214,9 +229,6 @@ game.playerEntity = me.ObjectEntity.extend({
 		// (melonJS function)
 		this.updateMovement();
 
-		if (!this.renderable.isFlickering())
-			this.invincible = false;
-
 		// Checking for collision with other things...
 		var res = me.game.world.collide(this);
 
@@ -259,10 +271,7 @@ game.playerEntity = me.ObjectEntity.extend({
 						this.vel.y = -this.maxVel.y * me.timer.tick;
 						this.jumping = true;
 
-						// Flickering the animation and
-						// making us invincible
-						this.renderable.flicker(750);
-						this.invincible = true;
+						this.makeInvincible(750);
 					}
 				}
 			}
@@ -341,29 +350,117 @@ game.playerEntity = me.ObjectEntity.extend({
 	},
 
 	/**
-	 * Makes the player die and respawn.
+	 * Starts the player dying animation.
+	 * When it finishes, will actually make the player die
 	 *
-	 * @note If there are no more lives left, goes to the
-	 *       Game Over state/screen.
+	 * @see #dieForReal()
 	 */
 	die : function() {
 
+		// No more updating for Mr. Player!
+		me.game.player.dying = true;
+
+		var originalOpacity  = this.renderable.getOpacity();
+
+		// Making the player slowly vanish
+		// (creating a Tween to change it's opacity)
+		new me.Tween({ opacity: originalOpacity })
+			.to({ opacity: 0 }, 500)
+			.easing(me.Tween.Easing.Exponential.InOut)
+			.onUpdate(function() {
+				// Note that `this` here refers to the Tween's
+				// current value - not the player's!
+				me.game.player.renderable.setOpacity(this.opacity);
+			})
+			.onComplete(function() {
+
+				// Now we really make the player die!
+				//
+				// Just a catch - before that we must restore
+				// the player's original opacity!
+				// Otherwise it'll be invisible forever
+				me.game.player.renderable.setOpacity(originalOpacity);
+				me.game.player.dying = false;
+
+				// DIE, motherfucker
+				me.game.player.dieForReal();
+			})
+			.start();
+	},
+
+	/**
+	 * Actually makes the player die and respawn.
+	 * It also plays with the viewport, check it out!
+	 *
+	 * @note Please don't call this directly... Prefer the
+	 *       `die()` animation.
+	 * @note If there are no more lives left, goes to the
+	 *       Game Over state/screen.
+	 */
+	dieForReal : function() {
 		this.lives--;
 
 		// We still have lives left, let's respawn
 		// the player.
 		if (this.lives >= 0) {
+
+			// Restore player's original position
 			this.pos.x = this.originalPosition.x;
 			this.pos.y = this.originalPosition.y;
 
+			this.makeInvincible(2000);
 			this.health = defaultPlayerHealth;
-			this.renderable.flicker(2000);
-			this.invincible = true;
+
+			// Let's animate the screen a little!
+			// When the player dies it's going to slowly go
+			// from where he died to it's respawn point.
+			//
+			// So it's a tricky manipulation on the viewport
+			// position.
+			//
+			// First, we need to save the current viewport position
+			// (where player died)
+			var viewportCurrentX = me.game.viewport.pos.x;
+			var viewportCurrentY = me.game.viewport.pos.y;
+
+			// Then we need to get where the viewport will be
+			// when he focuses on the player again
+			// (player respawn position)
+			//
+			// @note `viewport.follow` forces the camera to update
+			//       around the followed target
+			me.game.viewport.follow(this.pos, me.game.viewport.AXIS.BOTH);
+			var viewportFinalX = me.game.viewport.pos.x;
+			var viewportFinalY = me.game.viewport.pos.y;
+
+			// Now stop following the player
+			me.game.viewport.follow(this.pos, me.game.viewport.AXIS.NONE);
+
+			// And since we changed the viewport position,
+			// let's restore to where the player died
+			me.game.viewport.pos.x = viewportCurrentX;
+			me.game.viewport.pos.y = viewportCurrentY;
+
+			// Finally, gently go to the player's spawn point
+			new me.Tween(me.game.viewport.pos)
+				.to({ x: viewportFinalX, y: viewportFinalY }, 1000)
+				.easing(me.Tween.Easing.Exponential.Out)
+				.onComplete(function() {
+					// When you're done, restart following
+					// the player again
+					me.game.viewport.follow(
+						me.game.player.pos,
+						me.game.viewport.AXIS.BOTH
+					);
+				})
+				.start();
+
 			return;
 		}
 
 		// Oops, game over!
 		this.alive = false;
+
 		me.device.vibrate(500);
 		me.game.world.removeChild(this);
 
@@ -379,7 +476,25 @@ game.playerEntity = me.ObjectEntity.extend({
 		);
 	},
 
+	/**
+	 * Makes the player invincible (flickering it's Sprite) for a while.
+	 *
+	 * @param timeout How long (in ms) it'll stay invincible.
+	 */
+	makeInvincible : function(timeout) {
 
+		if (timeout <= 0 || timeout > 5000) {
+			// Insert cheat-detecting code here
+		}
+
+		this.renderable.flicker(
+			timeout,
+			function() {
+				me.game.player.invincible = false;
+			}
+		);
+		this.invincible = true;
+	},
 
 
 

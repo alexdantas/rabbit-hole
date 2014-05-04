@@ -3,6 +3,18 @@
  *
  * Has a background image and a progress bar on the
  * bottom.
+ *
+ * Thanks for the following links, could not have made this
+ * without their support:
+ * - melonJS's default Loading Screen
+ *   https://github.com/melonjs/melonJS/blob/master/src/loader/loadingscreen.js
+ * - melonJS's Google Groups discussion
+ *   https://groups.google.com/forum/#!topic/melonjs/rpNsOxJ9gS0
+ * - blipjoy's template:
+ * https://github.com/blipjoy/template/blob/366edcc02e018eac24c1faac49acf93a63072304/public/js/screens/blipjoy.js#L2-L30
+ * - Cuddly-Demo-HTML5-Remake
+ *   https://github.com/shazz/Cuddly-Demo-HTML5-Remake/blob/master/screens/intro/screen.js
+ *
  */
 
 /*global game,me*/
@@ -132,8 +144,7 @@ game.CustomLoadingScreen = me.ScreenObject.extend({
 	},
 
 	"onDestroyEvent" : function() {
-		if (this.handler !== null)
-			me.event.unsubscribe(this.handler);
+		me.event.unsubscribe(this.handler);
 	}
 });
 
