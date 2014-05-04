@@ -60,6 +60,8 @@ game.PlayState = me.ScreenObject.extend({
 		me.input.bindKey(me.input.KEY.D,     "right");
 		me.input.bindKey(me.input.KEY.UP,    "jump");
 		me.input.bindKey(me.input.KEY.W,     "jump");
+		me.input.bindKey(me.input.KEY.DOWN,  "down");
+		me.input.bindKey(me.input.KEY.S,     "down");
 		me.input.bindKey(me.input.KEY.SPACE, "jump");
 		me.input.bindKey(me.input.KEY.SHIFT, "boost", false, true);
 
@@ -178,6 +180,8 @@ game.PlayState = me.ScreenObject.extend({
 		me.input.unbindKey(me.input.KEY.D,     "right");
 		me.input.unbindKey(me.input.KEY.UP,    "jump",  true);
 		me.input.unbindKey(me.input.KEY.W,     "jump",  true);
+		me.input.unbindKey(me.input.KEY.DOWN,  "down");
+		me.input.unbindKey(me.input.KEY.S,     "down");
 		me.input.unbindKey(me.input.KEY.SHIFT, "boost", true);
 		me.input.unbindKey(me.input.KEY.SPACE, "jump");
 

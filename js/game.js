@@ -83,7 +83,7 @@ var game = {
 			"white", "middle"
 		).draw(
 			me.video.getScreenContext(),
-			"Hold on, preloading stuff...",
+			"Hold on, loading the loading screen...",
 			0, 0
 		);
 

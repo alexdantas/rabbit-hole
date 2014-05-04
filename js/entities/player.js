@@ -26,10 +26,25 @@ game.playerEntity = me.ObjectEntity.extend({
 		// Aside from the `settings` passed by Tiled
 		settings.image = "player-spritesheet";
 
-		settings.spritewidth  = settings.width  = 32;
-		settings.spriteheight = settings.height = 64;
+		// The collision box will be approximately 1 tile per two
+		// But the actual sprites are the following:
+		settings.spritewidth  = settings.width  = 50;
+		settings.spriteheight = settings.height = 79;
 
+		// Need to create super-class-specific stuff
 		this.parent(x, y, settings);
+
+		// Resizing the collision box inside the sprite
+		// (not assuming the whole image)
+		// @note Those sizes are arbitrary; were defined
+		//       by trial and error
+		var shape = this.getShape();
+		shape.pos.x = 10;
+		shape.pos.y = 14;
+		shape.resize(
+			shape.width  - 2*shape.pos.x,
+			shape.height - 1.5*shape.pos.y
+		);
 
 		// To respawn later
 		this.originalPosition = new me.Vector2d(x, y);
@@ -38,15 +53,6 @@ game.playerEntity = me.ObjectEntity.extend({
 		// are not updated.
 		// It's not the case of the player.
 		this.alwaysUpdate = true;
-
-		// Adjusting the collision rectangle to the sprite
-		// (not assuming the whole image)
-		var shape = this.getShape();
-		shape.pos.x = 7;
-		shape.resize(
-			shape.width - 2*shape.pos.x,
-			shape.height - 1
-		);
 
 		// Maximum speed on which we
 		// throw the player up
@@ -88,11 +94,13 @@ game.playerEntity = me.ObjectEntity.extend({
 		//
 		// First argument are the sprite indexes for the animation,
 		// with an optional ms delay between them.
-		this.renderable.addAnimation("standing", [0]);
-		this.renderable.addAnimation("jumping",  [9]);
-		this.renderable.addAnimation("falling",  [10]);
-		this.renderable.addAnimation("walking",  [1, 2, 3, 2], 150);
-		this.renderable.addAnimation("running",  [4, 5, 6, 7], 75);
+		this.renderable.addAnimation("standing",  [0, 2], 2300);
+		this.renderable.addAnimation("jumping",   [8]);
+		this.renderable.addAnimation("falling",   [9]);
+		this.renderable.addAnimation("dying",     [3]);
+		this.renderable.addAnimation("crouching", [10]);
+		this.renderable.addAnimation("walking",   [4, 5, 6, 7], 150);
+		this.renderable.addAnimation("running",   [12, 13, 14, 15], 75);
 
 		// This forces the current animation.
 		//
@@ -104,11 +112,13 @@ game.playerEntity = me.ObjectEntity.extend({
 
 		// Here's all the flags
 		// They tell how the player is behaving _right now_
-		this.standing    = true;
-		this.facingLeft  = false;
-		this.running     = false;
-		this.invincible  = false;
-		this.jumping     = false;
+		this.standing   = true;
+		this.facingLeft = false;
+		this.running    = false;
+		this.invincible = false;
+		this.jumping    = false;
+		this.dying      = false;
+		this.crouching  = false;
 
 		// Maximum time (ms) that the user can hold
 		// the jump key, thus making the player jump higher
@@ -130,10 +140,6 @@ game.playerEntity = me.ObjectEntity.extend({
 		//       If you want to persistently save it,
 		//       save to `me.save`
 		game.data.currentLevel = me.levelDirector.getCurrentLevelId();
-
-		// We need this flag to be sure the player's
-		// "death animation" is running
-		this.dying = false;
 
 		this.type = me.game.PLAYER_OBJECT;
 	},
@@ -171,18 +177,16 @@ game.playerEntity = me.ObjectEntity.extend({
 		var walkedOnThisFrame = false;
 
 		if (me.input.isKeyPressed("left")) {
-
 			this.standing     = false;
 			this.facingLeft   = true;
 			walkedOnThisFrame = true;
-
-		} else if (me.input.isKeyPressed("right")) {
-
+		}
+		else if (me.input.isKeyPressed("right")) {
 			this.standing     = false;
 			this.facingLeft   = false;
 			walkedOnThisFrame = true;
-
-		} else {
+		}
+		else {
 
 			// No need to make the player stop
 			// (friction is handled by melonJS)
@@ -194,6 +198,15 @@ game.playerEntity = me.ObjectEntity.extend({
 				(this.vel.x <=  this.standingThreshold))
 				this.standing = true;
 		}
+
+		// Activate crouching animation if the ONLY movement
+		// key pressed is "down"
+		this.crouching = false;
+		if (  me.input.isKeyPressed("down")  &&
+			! me.input.isKeyPressed("left")  &&
+			! me.input.isKeyPressed("right") &&
+			! me.input.isKeyPressed("jump"))
+			this.crouching = true;
 
 		// Secret! Don't tell anyone
 		if (game.debugMode)
@@ -271,7 +284,7 @@ game.playerEntity = me.ObjectEntity.extend({
 						this.vel.y = -this.maxVel.y * me.timer.tick;
 						this.jumping = true;
 
-						this.makeInvincible(750);
+						this.makeInvincible(950);
 						me.audio.play("hurt");
 					}
 				}
@@ -295,11 +308,13 @@ game.playerEntity = me.ObjectEntity.extend({
 		// By default, we'll assume the player is standing
 		var animation = "";
 
-		if      (this.jumping)  animation = "jumping";
-		else if (this.falling)  animation = "falling";
-		else if (this.standing) animation = "standing";
-		else if (this.running)  animation = "running";
-		else                    animation = "walking";
+		if      (this.dying)     animation = "dying";
+		else if (this.crouching) animation = "crouching";
+		else if (this.jumping)   animation = "jumping";
+		else if (this.falling)   animation = "falling";
+		else if (this.standing)  animation = "standing";
+		else if (this.running)   animation = "running";
+		else                     animation = "walking";
 
 		// Flipping the sprite if needed.
 		// (since all sprites are by default facing right)
@@ -359,7 +374,9 @@ game.playerEntity = me.ObjectEntity.extend({
 	die : function() {
 
 		// No more updating for Mr. Player!
-		me.game.player.dying = true;
+		// (but force the "dying" animation)
+		this.dying = true;
+		this.updateAnimation();
 
 		var originalOpacity  = this.renderable.getOpacity();
 
