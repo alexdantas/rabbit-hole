@@ -238,9 +238,14 @@ game.friendEntity = me.CollectableEntity.extend({
 		// Warning the global counter
 		friends.remove(this);
 
-//		me.game.friends[me.game.friends.indexOf(this)] = null;
+		// Not removing child from world because
+		// since I'm using a `invalid` flag, I need to
+		// keep accessing it
 //		me.game.world.removeChild(this);
+
 		me.audio.play("cling");
+		if (friends.remaining() === 0)
+			me.game.player.victory();
 	}
 });
 

@@ -518,7 +518,27 @@ game.playerEntity = me.ObjectEntity.extend({
 		this.invincible = true;
 	},
 
+	/**
+	 * Player beat the game!
+	 * Oooh yeah baby
+	 */
+	victory : function() {
 
+		// Shake the screen and fade-out
+		me.game.viewport.shake(
+			20,
+			3000,
+			me.game.viewport.AXIS.BOTH
+		);
+		me.game.viewport.fadeIn(
+			'#000000',
+			3100,
+			function() {
+				me.state.setTransition(me.state.STATE_VICTORY, false);
+				me.state.change(me.state.STATE_VICTORY);
+			}
+		);
+	},
 
 
 

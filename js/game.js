@@ -163,6 +163,7 @@ var game = {
 		me.state.STATE_GAME_OVER    = me.state.GAMEOVER;
 		me.state.STATE_AREA_SELECT  = me.state.USER + 2;
 		me.state.STATE_PLAY         = me.state.PLAY;
+		me.state.STATE_VICTORY      = me.state.USER + 3;
 
 		// Attaching our state constants to actual
 		// objects.
@@ -171,6 +172,7 @@ var game = {
 		me.state.set(me.state.STATE_CREDITS,   new game.CreditsState());
 		me.state.set(me.state.STATE_PLAY,      new game.PlayState());
 		me.state.set(me.state.STATE_GAME_OVER, new game.GameOverState());
+		me.state.set(me.state.STATE_VICTORY,   new game.VictoryState());
 
 		// Global transition to occur between all states
 		me.state.transition("fade", "#000000", 250);
@@ -209,7 +211,11 @@ var game = {
 
 			// Enable/disable all audio
 			// (music and sound effects)
-			sound : true
+			sound : true,
+
+			// How many times this user beat
+			// the game
+			beatGame : 0
 		});
 
 		// If these settings have different values
