@@ -175,6 +175,18 @@ game.resources = [
 		 type    : "audio",
 		 src     : "data/audio/sfx/",
 		 channel : 2
+	 },
+	 {
+		 name    : "hurt",
+		 type    : "audio",
+		 src     : "data/audio/sfx/",
+		 channel : 2
+	 },
+	 {
+		 name    : "dead",
+		 type    : "audio",
+		 src     : "data/audio/sfx/",
+		 channel : 2
 	 }
 ];
 

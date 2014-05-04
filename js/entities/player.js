@@ -272,6 +272,7 @@ game.playerEntity = me.ObjectEntity.extend({
 						this.jumping = true;
 
 						this.makeInvincible(750);
+						me.audio.play("hurt");
 					}
 				}
 			}
@@ -334,7 +335,7 @@ game.playerEntity = me.ObjectEntity.extend({
 			// can hold the button to jump higher
 			this.jumpTimer = me.timer.getTime();
 
-			me.audio.play("jump");
+			me.audio.play("jump", false, null, 0.6);
 		}
 		else if (!imOnGround && iWannaJump) {
 
@@ -386,6 +387,10 @@ game.playerEntity = me.ObjectEntity.extend({
 				me.game.player.dieForReal();
 			})
 			.start();
+
+		// This sound is particularly loud
+		// Arguments: id, repeat, callback, volume
+		me.audio.play("dead", false, null, 0.3);
 	},
 
 	/**

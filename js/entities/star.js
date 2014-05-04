@@ -33,7 +33,10 @@ game.starEntity = me.CollectableEntity.extend({
 		this.collidable = false;
 
 		me.game.world.removeChild(this);
-		me.audio.play("cling");
+
+		// This sound is particularly loud
+		// Arguments: id, repeat, callback, volume
+		me.audio.play("cling", false, null, 0.4);
 	}
 });
 
