@@ -84,6 +84,36 @@ var game = {
 		// Initialize the audio.
 		me.audio.init("ogg,mp3");
 
+		// My own custom loading screen!
+		//
+		// Will only go to it after loading it's background
+		// image first.
+		//
+		// For it's implementation, see file `states/loading.js`
+		me.loader.load(
+
+			// I need to full specify the resource here
+			// because all the resources weren't really loaded yet.
+			{
+				name : "loading-bg",
+				type : "image",
+				src  : "data/image/loading.png"
+			},
+
+			// Called when finished loading the resource above
+			this.readyToLoadScreen.bind(this),
+
+			// Called when an error occurs when loading
+			function() {
+				alert("Couldn't load resources!");
+			}
+		);
+	},
+
+	readyToLoadScreen : function() {
+
+		me.state.set(me.state.LOADING, new game.CustomLoadingScreen());
+
 		// Set a callback to run when loading is complete.
 		me.loader.onload = this.loaded.bind(this);
 
@@ -99,7 +129,7 @@ var game = {
 	 * Run as soon as all the game resources loads
 	 * (past the loading screen).
 	 */
-	"loaded" : function() {
+	loaded : function() {
 
 		// Defining all our game states.
 		// They're used by `me.state.change()`

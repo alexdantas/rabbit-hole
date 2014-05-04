@@ -50,12 +50,17 @@ game.resources = [
 		src  :  "data/image/sprite/enemy-2.png"
 	},
 	{
-		name : "spike",
+		name : "spike-spritesheet",
 		type : "image",
 		src  :  "data/image/sprite/spike.png"
 	},
 
 	// Backgrounds
+	{
+		name : "loading-bg",
+		type : "image",
+		src  : "data/image/loading.png"
+	},
 	{
 		// Parallax 1
 		name : "area01_bkg0",

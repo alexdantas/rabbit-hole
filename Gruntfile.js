@@ -13,7 +13,13 @@ module.exports = function(grunt) {
 		// Concatenates all javascript files into one
 		concat: {
 			dist: {
-				src: ['lib/melonJS-1.0.0-min.js', 'lib/plugins/*.js', 'js/game.js', 'js/resources.js','js/**/*.js'],
+				src: [
+					'lib/melonJS-1.0.0-min.js',
+					'lib/plugins/*.js',
+					'js/game.js',
+					'js/resources.js',
+					'js/**/*.js'
+				],
 				dest: 'build/js/app.js'
 			}
 		},
@@ -48,7 +54,7 @@ module.exports = function(grunt) {
 		// Minifies a `.js` file into a `.min.js`
 		uglify: {
 			options: {
-				banner: '/*full source code at <%= pkg.github %>*/',
+				banner: '/*full source code at <%= pkg.repository %>*/',
 				report: 'min',
 				preserveComments: 'false'
 			},
@@ -60,6 +66,12 @@ module.exports = function(grunt) {
 				}
 			}
 		},
+
+		// After uglifying, remove the original
+		// non-minimized file at the `build` directory
+		clean: [
+			'build/js/app.js'
+		],
 
 		// Synchronize all the data on `build`
 		// directory to a remote server.
@@ -77,6 +89,32 @@ module.exports = function(grunt) {
 					syncDestIgnoreExcl: true
 				}
 			}
+		},
+
+		// Builds a node-webkit app from the source
+		nodewebkit: {
+			options: {
+				build_dir: 'webkit_build',
+				mac: false,
+				win: true,
+				linux32: false,
+				linux64: true
+			},
+			src: [
+				'css/**/*',
+				'data/**/*',
+				'js/**/*',
+				'lib/**/*',
+				'favicon.png',
+				'Gruntfile.js',
+				'humans.txt',
+				'index.html',
+				'LICENSE.md',
+				'manifest.webapp',
+				'package.json',
+				'README.md',
+				'robots.txt'
+			]
 		}
 	});
 
@@ -85,6 +123,7 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-contrib-copy');
 	grunt.loadNpmTasks('grunt-processhtml');
 	grunt.loadNpmTasks('grunt-rsync');
+	grunt.loadNpmTasks('grunt-node-webkit-builder');
 
 	// Things that will run by default
 	grunt.registerTask('default', [

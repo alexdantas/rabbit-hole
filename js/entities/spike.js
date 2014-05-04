@@ -11,13 +11,16 @@ game.spikeEntity = me.ObjectEntity.extend({
 		// The `settings` hash is defined on Tiled.
 
 		// This image is defined on `resources.js`
-		settings.image = "spike";
+		settings.image = "spike-spritesheet";
 
 		// Adjust the size setting to match the sprite size
 		settings.spritewidth  = settings.width  = 32;
 		settings.spriteheight = settings.height = 32;
 
 		this.parent(x, y, settings);
+
+		this.renderable.addAnimation("burn", [0, 1], 150);
+		this.renderable.setCurrentAnimation("burn");
 
 		this.collidable = true;
 		this.type = me.game.SPIKE_OBJECT;

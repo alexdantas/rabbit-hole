@@ -24,7 +24,6 @@ body {
 }
 #screen canvas {
 	margin: auto;
-	border: 1px solid #111;
 
 	/* Hide the gap for font descenders. */
 	display: block;
