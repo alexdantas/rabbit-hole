@@ -8,6 +8,11 @@
 var game = {
 
 	/**
+	 * Game version; the same as `package.json`.
+	 */
+	version : "1.0.0",
+
+	/**
 	 * Stores information that will be used on current
 	 * game session.
 	 *

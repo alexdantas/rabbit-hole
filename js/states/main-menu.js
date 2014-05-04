@@ -110,6 +110,21 @@ game.MainMenuState = me.ScreenObject.extend({
 
 			draw : function(context) {
 
+				// Showing the current game version
+				// on the top right part
+				//
+				// It is defined at "compile" time by a <meta>
+				// element at the end of the HTML with #version id
+				// and version attribute.
+				//
+				// like: <meta id="version" version="1.0.0" />
+				me.game.font.draw(
+					context,
+					"V " + game.version,
+					me.game.viewport.width - 7 * 16,
+					0
+				);
+
 				var xoffset = game.half_tile(10);
 
 				me.game.font.draw(

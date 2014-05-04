@@ -94,11 +94,11 @@ module.exports = function(grunt) {
 		// Builds a node-webkit app from the source
 		nodewebkit: {
 			options: {
-				build_dir: 'webkit_build',
-				mac: false,
-				win: true,
-				linux32: false,
-				linux64: true
+				build_dir : 'webkit_build',
+				mac       : true,
+				win       : true,
+				linux32   : true,
+				linux64   : true
 			},
 			src: [
 				'css/**/*',
