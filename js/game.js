@@ -19,7 +19,7 @@ var game = {
 		score : 0,
 
 		// First level to be loaded
-		currentLevel : "area01"
+		currentLevel : "area00"
 	},
 
 	/**

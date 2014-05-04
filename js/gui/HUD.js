@@ -349,7 +349,7 @@ game.HUD.radar = me.Renderable.extend({
 			2
 		);
 
-		context.fillStyle = 'black';
+		context.fillStyle = '#0f0';
 
 		// Drawing all the friends
 		for (var i = 0; i < me.game.friends.length; i++) {

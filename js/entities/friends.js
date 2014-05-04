@@ -102,10 +102,10 @@ var friends = {
 		if (friends.remaining() <= amount)
 			return;
 
-		var deleteAmount = friends.remaining() - amount;
+		var deleteAmount = friends.remaining() - amount - 1; // don't remove this 1 here!
 		var maxIndex     = friends.remaining() - 1;
 
-		while (deleteAmount > 0) {
+		while (deleteAmount >= 0) {
 
 			var i = 0;
 

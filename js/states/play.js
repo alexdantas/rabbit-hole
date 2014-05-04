@@ -21,7 +21,7 @@ game.PlayState = me.ScreenObject.extend({
 		game.data.score = 0;
 		friends.reset();
 
-		// Call `thisl.onLevelLoaded()` every time
+		// Call `this.onLevelLoaded()` every time
 		// a new level is loaded.
 		me.game.onLevelLoaded = this.onLevelLoaded.bind(this);
 
