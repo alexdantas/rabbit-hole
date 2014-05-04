@@ -20,9 +20,6 @@ game.VictoryState = me.ScreenObject.extend({
 				            me.game.viewport.width,
 				            me.game.viewport.height);
 
-				// Resetting player to the first level
-				game.data.currentLevel = "area00";
-
 				me.save.beatGame = me.save.beatGame + 1;
 			},
 

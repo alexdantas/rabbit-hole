@@ -4,13 +4,16 @@
 
 Simple HTML5 2D platformer, initially made [for the Ludum Dare #29][entry].
 Powered by [melonJS][melonjs], it works on most web browsers,
-including on mobile devices.
+including mobile devices.
 
 ## Gameplay
 
-You control a girl in a rabbit outfit who has to save her friends, also dressed
-as animals. She needs to descend into the depths of hell, fighting all sorts of
-strange enemies on her way (mostly walking-fire-people).
+You're Ceci, a cute girl in a rabbit outfit, who has to save her friends
+from a burning on the Rabbit Hole; a huge cave filled with all sorts of
+things.
+
+Avoid the fire, collect stars on the way, fight the strange
+walking-fire-people and make sure to leave no friend behind!
 
 ### Controls
 
@@ -31,8 +34,8 @@ This game supports touch screens.
 
 [To play the game right now, follow this link][play].
 
-If you want your own **local version**, [download the repository][repo], start a
-web server and open `index.html` on your favorite browser.
+If you want your own **local version**, [download the repository][repo],
+start a web server and open `index.html` on your favorite browser.
 
 Note that this repository is a **development version** of the game. It splits
 the code over several `.js` files.
@@ -80,8 +83,8 @@ Here's how the code is laid out:
 
 The team:
 
-* **Lead Developer**: *Alexandre Dantas*              ([homepage][alexdantas])
-* **Main Artist**:    *Natália Cristina Alves Barros* ([deviantArt][bdnachi])
+* **Developer**: *Alexandre Dantas*              ([homepage][alexdantas])
+* **Artist**:    *Natália Cristina Alves Barros* ([deviantArt][bdnachi])
 
 Acknowledgments:
 
@@ -95,6 +98,8 @@ Acknowledgments:
   Thanks a lot, [Marc Russell][marc]!
 * Background music and sound effects by [Anders Svensson][anders],
   originally featured on [Alex4][alex4].
+* [sfxr], great software to create sound effects on-the-fly.
+  Thank you, [DrPetter]!
 
 ## License
 
@@ -115,4 +120,6 @@ cannot do with it.
 [marc]:        http://spicypixel.net/
 [anders]:      http://www.freelunchdesign.com/
 [alex4]:       https://sourceforge.net/p/allegator/alex4/ci/master/tree/
+[sfxr]:        http://www.drpetter.se/project_sfxr.html
+[DrPetter]:    http://www.drpetter.se/
 

@@ -25,12 +25,26 @@ game.PlayState = me.ScreenObject.extend({
 		// a new level is loaded.
 		me.game.onLevelLoaded = this.onLevelLoaded.bind(this);
 
-		// Load the current level
+		// Before loading the level, let's place a text
+		// on the screen saying that we're doing this
+		me.game.font.draw(
+			me.video.getScreenContext(),
+			"Loading level...",
+			0, 0
+		);
+
+		// Load the first level.
+		//
+		// @note If the user beat the game, let's avoid going
+		//       back into the first level anyways...
 		//
 		// @warning On mobile devices this takes FOREVER
 		//          There must be a way I can warn the users
 		//          of such behavior.
-		me.levelDirector.loadLevel(game.data.currentLevel);
+		if (me.save.beatLevel > 0)
+			me.levelDirector.loadLevel("area01");
+		else
+			me.levelDirector.loadLevel(game.data.currentLevel);
 
 		// Add our HUD to the game world
 		this.HUD = new game.HUD.Container();
